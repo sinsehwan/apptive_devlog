@@ -4,8 +4,13 @@ import apptive.devlog.auth.entity.User;
 import apptive.devlog.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -39,5 +44,16 @@ public class UserService {
     // 닉네임 중복 체크
     public boolean isNicknameDuplicated(String nickname){
         return userRepository.existsByNickname(nickname);
+    }
+
+    public User getUser(String name){
+        Optional<User> user = userRepository.findByName(name);
+
+        if(user.isEmpty()){
+            throw new NoSuchElementException("해당 사용자는 존재하지 않습니다.");
+        }
+        else{
+            return user.get();
+        }
     }
 }

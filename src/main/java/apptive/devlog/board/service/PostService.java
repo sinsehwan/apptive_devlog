@@ -1,5 +1,6 @@
 package apptive.devlog.board.service;
 
+import apptive.devlog.auth.entity.User;
 import apptive.devlog.auth.repository.UserRepository;
 import apptive.devlog.board.entity.Post;
 import apptive.devlog.board.entity.PostData;
@@ -17,7 +18,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
 
-    // 생성
+    // 생성 후 이메일 전송
     public Post create(Post post){
         post.setCreatedAt(LocalDate.now());
         post.setUpdatedAt(LocalDate.now());
@@ -50,6 +51,13 @@ public class PostService {
     public Post get(Long id){
         return postRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다."));
+    }
+
+    public User getUserById(Long id){
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다.")
+        );
+        return post.getUser();
     }
 
     //모든 게시글 조회

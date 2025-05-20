@@ -1,5 +1,6 @@
 package apptive.devlog.board.repository;
 
+import apptive.devlog.auth.entity.User;
 import apptive.devlog.board.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 

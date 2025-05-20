@@ -1,7 +1,10 @@
 package apptive.devlog.board.service;
 
 import apptive.devlog.board.entity.Comment;
+import apptive.devlog.board.entity.Post;
 import apptive.devlog.board.repository.CommentRepository;
+import apptive.devlog.board.repository.PostRepository;
+import apptive.devlog.mail.service.MailService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,14 +16,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final PostService postService;
+    private final MailService mailService;
 
-    // 생성
-    public Comment create(Comment comment){
+    // 댓글 생성, 이메일 notify
+    public Comment createAndNotify(Long postId, Comment comment){
+        Post post = postService.get(postId);
+        comment.setPost(post);
+
         comment.setCreatedAt(LocalDate.now());
         comment.setUpdatedAt(LocalDate.now());
         comment.setIsDeleted(false);
         comment.setLikeCount(0L);
-        return commentRepository.save(comment);
+
+        Comment savedComment = commentRepository.save(comment);
+
+        //이메일 전송
+        mailService.sendMimeMessage(post.getUser().getEmail());
+
+        return savedComment;
     }
 
     // 수정
@@ -59,5 +73,9 @@ public class CommentService {
     // 유효한 댓글만 조회
     public List<Comment> getNotDeleted(){
         return commentRepository.findByIsDeletedFalse();
+    }
+
+    public List<Comment> getValidCommentByPostId(Long postId){
+        return commentRepository.findValidByPostId(postId);
     }
 }
