@@ -32,6 +32,7 @@ public class WebSecurityConfig {
                         // 로그인/회원가입 페이지 인증 없이 접근 허용
                         .requestMatchers("/users/login", "/users/signup").permitAll()
                         .requestMatchers("/api/board").permitAll() // board api 테스트용
+                        .requestMatchers("/mail/html").permitAll() // mail api 테스트용
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔용 설정
                         .anyRequest().authenticated()
                 )

@@ -28,6 +28,6 @@ public class Post {
     private Long likeCount;
     private Boolean isDeleted;
 
-    @OneToMany(mappedBy = "Post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList;
 }

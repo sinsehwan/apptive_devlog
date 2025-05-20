@@ -42,9 +42,4 @@ public class PostDataService {
     public List<PostData> getAll() {
         return postDataRepository.findAll();
     }
-
-    // 유효한 데이터 조회
-    public List<PostData> getNotDeleted() {
-        return postDataRepository.findByIsDeletedFalse();
-    }
 }
